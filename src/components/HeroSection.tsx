@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, Link } from 'react-router-dom';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { MdOutlineArrowOutward } from 'react-icons/md';
 import { motion } from 'framer-motion';
@@ -72,15 +72,21 @@ const HeroSection: React.FC = () => {
               <FaCalendarAlt className="mr-2" />
               <span>{new Date(currentData.pubDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
             </div>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white font-semibold rounded-full shadow-lg transition-transform ease-in-out duration-300 hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-blue-300"
-            >
-              <a href={currentData.link} className="flex items-center">
-                Baca Selengkapnya <MdOutlineArrowOutward className="ml-2" size={20} />
-              </a>
-            </motion.button>
+            <Link to={`/detail/${encodeURIComponent(currentData.title)}`} state={{ 
+    title: currentData.title, 
+    description: currentData.description, 
+    category: "Politik",  // Contoh kategori, sesuaikan sesuai data kamu
+    date: currentData.pubDate,
+    thumbnail: currentData.thumbnail
+  }}>
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white font-semibold rounded-full shadow-lg transition-transform ease-in-out duration-300 hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-blue-300"
+  >
+    Baca Selengkapnya <MdOutlineArrowOutward className="ml-2" size={20} />
+  </motion.button>
+</Link>
           </motion.div>
         </div>
         <div className="w-[600px] h-[400px] my-14 flex items-center justify-center">

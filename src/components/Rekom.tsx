@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';  // Import useNavigate
 import PaginationRekom from './PaginationRekom';
 import SearchInput from './SearchInput';
 
@@ -9,6 +10,15 @@ interface NewsItem {
   category: string;
   date: string;
   imageUrl: string;
+  description: string; // Add description if available in the API response
+}
+
+interface ApiResponseItem {
+  title: string;
+  category?: string;
+  pubDate: string;
+  thumbnail?: string;
+  description?: string;
 }
 
 const Rekom: React.FC = () => {
@@ -16,17 +26,19 @@ const Rekom: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);  // Mengatur jumlah item per halaman menjadi 8
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();  // Initialize navigate
 
   useEffect(() => {
     const fetchNews = async () => {
       try {
         const response = await axios.get('https://api-berita-indonesia.vercel.app/cnn/nasional');
-        const fetchedNews = response.data.data.posts.map((item: { title: string; category?: string; pubDate: string; thumbnail?: string }, index: number) => ({
-            id: index,
+        const fetchedNews = response.data.data.posts.map((item: ApiResponseItem, index: number) => ({
+          id: index,
           title: item.title,
           category: item.category || 'Nasional',
-          date: new Date(item.pubDate).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }),
+          date: item.pubDate,  // Pass the raw date string, assuming it's in a proper format
           imageUrl: item.thumbnail || 'https://via.placeholder.com/150',
+          description: item.description || 'No description available.',
         }));
         setNewsData(fetchedNews);
       } catch (error) {
@@ -45,6 +57,10 @@ const Rekom: React.FC = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredNews.slice(indexOfFirstItem, indexOfLastItem);
 
+  const handleItemClick = (news: NewsItem) => {
+    navigate(`/detail/${news.id}`, { state: { ...news } });
+  };
+
   return (
     <div className="max-w-7xl mx-auto py-8">
       <div className="flex justify-between items-center mb-8 mx-5">
@@ -55,7 +71,11 @@ const Rekom: React.FC = () => {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-5">  {/* Mengatur grid menjadi 4 kolom */}
         {currentItems.map((news: NewsItem) => (
-          <div key={news.id} className="flex flex-col bg-white rounded-xl overflow-hidden shadow-md cursor-pointer">
+          <div
+            key={news.id}
+            className="flex flex-col bg-white rounded-xl overflow-hidden shadow-md cursor-pointer"
+            onClick={() => handleItemClick(news)}  // Handle item click
+          >
             <div className="w-full h-[180px]">  {/* Sesuaikan tinggi gambar */}
               <img src={news.imageUrl} alt={news.title} className="object-cover w-full h-full" />
             </div>

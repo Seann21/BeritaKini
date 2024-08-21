@@ -5,6 +5,7 @@ import HeroSection from './components/HeroSection';
 import NewsPopular from './components/NewsPopular';
 import Rekom from './components/Rekom';
 import Offer from './components/Offer';
+import DetailPage from './pages/DetailPage';
 import Footer from './components/Footer';
 import { newsLoader } from './loaders/newsLoader';
 
@@ -33,6 +34,11 @@ const router = createBrowserRouter([
             <Offer/>
           </>
         ),
+        loader: newsLoader,
+      },
+      {
+        path: '/detail/:id',
+        element: <DetailPage />,
         loader: newsLoader,
       },
       // Add more routes here if needed
