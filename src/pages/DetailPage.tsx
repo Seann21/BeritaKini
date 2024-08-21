@@ -9,10 +9,11 @@ import NewsRelated from '../components/NewsRelated';
 const DetailPage: React.FC = () => {
   const location = useLocation();
   const { title, description, category, date, imageUrl } = location.state || {};
+  
 
   const formattedDate = date
-    ? new Date(date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
-    : 'Tanggal tidak tersedia';
+  ? new Date(date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+  : 'Tanggal tidak tersedia';
 
   return (
     <div className="container mx-auto p-9 my-28">

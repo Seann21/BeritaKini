@@ -36,7 +36,7 @@ const Rekom: React.FC = () => {
           id: index,
           title: item.title,
           category: item.category || 'Nasional',
-          date: item.pubDate,  // Pass the raw date string, assuming it's in a proper format
+          date: new Date(item.pubDate).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }),
           imageUrl: item.thumbnail || 'https://via.placeholder.com/150',
           description: item.description || 'No description available.',
         }));
